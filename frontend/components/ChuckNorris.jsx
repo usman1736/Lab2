@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './ChuckNorris.css'; 
 
 const ChuckNorris = ({ token }) => {
   const [fact, setFact] = useState('');
@@ -8,6 +9,7 @@ const ChuckNorris = ({ token }) => {
   useEffect(() => {
     const fetchFact = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch('http://localhost:3333/fact', {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -30,30 +32,53 @@ const ChuckNorris = ({ token }) => {
       }
     };
 
-    fetchFact();
+    if (token) {
+      fetchFact();
+    }
   }, [token]);
 
+  // Enhanced loading spinner with better visual
   if (isLoading) {
     return (
-      <div className="fact-container">
-        <div className="loading-spinner"></div>
-        <p>Loading Chuck Norris fact...</p>
+      <div className="chuck-norris-container">
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+          <p>Fetching a Chuck Norris fact...</p>
+          <p className="loading-subtitle">This might take a moment</p>
+        </div>
       </div>
     );
   }
 
+  // Enhanced error display with retry button
   if (error) {
     return (
-      <div className="fact-container error">
-        <p>Error: {error}</p>
+      <div className="chuck-norris-container">
+        <div className="error-message">
+          <p>Error: {error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="retry-btn"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
 
+  // Enhanced fact display with better styling
   return (
-    <div className="fact-container">
-      <h2>Chuck Norris Fact:</h2>
-      <p className="fact-text">{fact}</p>
+    <div className="chuck-norris-container">
+      <div className="fact-card">
+        <h2>Chuck Norris Fact</h2>
+        <div className="fact-content">
+          <p className="fact-text">{fact}</p>
+        </div>
+        <div className="fact-footer">
+          <p className="fact-note">Random Chuck Norris fact just for you!</p>
+        </div>
+      </div>
     </div>
   );
 };
