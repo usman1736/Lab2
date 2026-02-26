@@ -20,7 +20,7 @@ const createMiddleware = (app) => {
         next();
     });
 
-    app.use(['/fact', '/logout'], (req, res, next) => {
+    app.use(['/fact', '/facts', '/logout'], (req, res, next) => {
         const authHeaderValue = req.header('Authorization');
 
         if (!authHeaderValue) {
@@ -76,10 +76,8 @@ const createRoutes = (app) => {
         }
     });
 
-    app.get('/fact', (req, res) => {
-        const max = facts.length - 1;
-
-        const index = Math.floor(Math.random() * max) + 1;
+    app.get(['/fact', '/facts'], (req, res) => {
+        const index = Math.floor(Math.random() * facts.length);
 
         res.status(200);
         res.json({ fact: facts[index] });
